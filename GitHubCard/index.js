@@ -1,8 +1,27 @@
+import axios from 'axios';
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+
+const followersArray = [ "tetondan", "dustinmyers", "justsml", "luishrd", "bigknell", "abelleradaryl"];
+
+
+followersArray.forEach(username => {
+  getCards(username);
+})
+
+
+function getCards(username) {
+  axios.get(`https://api.github.com/users/${username}`)
+  .then(resp => {
+    document.querySelector(".cards").appendChild(gitCard(resp.data));
+  })
+  .catch(err => {
+    console.log(err);
+  })
+}
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -12,9 +31,11 @@
     Skip to STEP 3 (line 34).
 */
 
+
+
 /*
   STEP 4: Pass the data received from Github into your function,
-    and append the returned markup to the DOM as a child of .cards
+    and append the returned markup to the DOM as a child of .cards  
 */
 
 /*
@@ -28,7 +49,53 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
+
+
+function gitCard(info) {
+  const main = document.createElement("div");
+  const image = document.createElement("img");
+  const cardInfo = document.createElement("div");
+  const name = document.createElement("h3");
+  const userName = document.createElement("p");
+  const location = document.createElement("p");
+  const profile = document.createElement("p");
+  const profileLink = document.createElement("a")
+  const followers = document.createElement("p");
+  const following = document.createElement("p");
+  const bio = document.createElement("p");
+
+  main.classList.add("card");
+  cardInfo.classList.add("card-info");
+  name.classList.add("name");
+  userName.classList.add("username");
+
+  image.src = info.avatar_url;
+  name.textContent = info.name;
+  userName.textContent = info.login;
+  location.textContent = info.location;
+  profile.textContent = "Profile:";
+  profileLink.textContent = " Profile Link";
+  profileLink.href = info.html_url;
+  followers.textContent = `Followers: ${info.followers}`;
+  following.textContent = `Following: ${info.following}`;
+  bio.textContent = info.bio;
+
+
+  main.appendChild(image);
+  main.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  profile.appendChild(profileLink);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+  console.log(main);
+  return main;
+}
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
